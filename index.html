@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>IceLab - Menú Interactivo Premium</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#030407">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@600;700&family=Montserrat:wght@800;900&family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        body { background-color: #030407; color: #ffffff; font-family: 'Poppins', sans-serif; display: flex; justify-content: center; align-items: flex-start; min-height: 100vh; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+        
+        @keyframes neon-pulse-day { 
+            0%, 100% { color: #ffffff; text-shadow: 0 0 7px #fff, 0 0 15px #00ffcc, 0 0 30px #00ffcc; } 
+            50% { color: #bffff3; text-shadow: 0 0 4px #fff, 0 0 10px #00ffcc, 0 0 20px #00ffcc; } 
+        }
+        @keyframes neon-pulse-night { 
+            0%, 100% { color: #ffffff; text-shadow: 0 0 7px #fff, 0 0 15px #ff007f, 0 0 30px #ff007f; } 
+            50% { color: #ffbfe2; text-shadow: 0 0 4px #fff, 0 0 10px #ff007f, 0 0 20px #ff007f; } 
+        }
+        @keyframes border-glow-move {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .neon-day-glow { animation: neon-pulse-day 1.5s infinite alternate; }
+        .neon-night-glow { animation: neon-pulse-night 1.5s infinite alternate; }
+        
+        .mobile-viewport { width: 100%; max-width: 480px; background-color: #06080c; min-height: 100vh; display: flex; flex-direction: column; position: relative; box-shadow: 0 0 50px rgba(0, 255, 204, 0.1); padding-top: calc(10px + env(safe-area-inset-top)); padding-bottom: calc(20px + env(safe-area-inset-bottom)); transition: all 0.5s ease; }
+        .mobile-viewport::before { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: linear-gradient(rgba(255,255,255,0.007) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.007) 1px, transparent 1px); background-size: 24px 24px; z-index: 0; pointer-events: none; }
+        .mobile-viewport > * { position: relative; z-index: 1; }
+        
+        .glow-day { box-shadow: 0 0 25px rgba(0, 255, 204, 0.25); border-color: rgba(0, 255, 204, 0.6); background: linear-gradient(135deg, rgba(0,255,204,0.05) 0%, rgba(0,0,0,0) 100%); }
+        .glow-night { box-shadow: 0 0 25px rgba(255, 0, 127, 0.3); border-color: rgba(255, 0, 127, 0.6); background: linear-gradient(135deg, rgba(255,0,127,0.05) 0%, rgba(0,0,0,0) 100%); }
+        
+        .delivery-gradient-card {
+            background: linear-gradient(90deg, #00ffcc, #ff007f, #00ffcc);
+            background-size: 200% auto;
+            animation: border-glow-move 4s linear infinite;
+        }
+        
+        .transition-theme { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+        .formula-card:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+    <div class="mobile-viewport" id="viewport">
+        
+        <!-- ENCABEZADO -->
+        <div class="header flex flex-col items-center pt-8 px-5 pb-3 text-center">
+            <div class="inline-block px-4 py-1 rounded-full border border-gray-800 bg-black/40 backdrop-blur-md mb-2 text-[10px] font-bold tracking-[0.3em] text-gray-400">LABORATORIO COLD CREW</div>
+            <h1 class="font-['Fredoka'] text-[54px] leading-none uppercase tracking-wider text-white transition-all duration-300 neon-day-glow" id="textLogo">ICE LAB</h1>
+            <p class="font-['Montserrat'] text-[10px] uppercase tracking-[0.3em] text-[#00ffcc] transition-all duration-300 mt-2 font-black" id="subtextLogo">Experimentos Bajo Cero</p>
+            <h2 class="font-['Fredoka'] text-3xl uppercase tracking-widest text-center text-white transition-theme mt-6 bg-gradient-to-r from-white to-gray-400 bg-clip-text text-transparent" id="mainTitle">Fórmulas</h2>
+        </div>
+
+        <!-- SELECTOR DÍA / NOCHE -->
+        <div class="px-4 my-3">
+            <div class="bg-[#0b1019] border border-gray-800/80 rounded-2xl p-1.5 flex justify-between items-center relative overflow-hidden shadow-inner">
+                <div class="absolute top-1.5 bottom-1.5 left-1.5 w-[48%] rounded-xl transition-all duration-300 ease-out z-0 bg-[#00ffcc] shadow-[0_0_20px_rgba(0,255,204,0.5)]" id="modeSelectorBg"></div>
+                
+                <button onclick="setMenuMode('day')" class="w-[48%] py-3 text-center rounded-xl font-['Montserrat'] font-black text-xs uppercase tracking-wider transition-all duration-300 z-10 text-slate-950 flex justify-center items-center gap-2" id="btnDay">
+                    <i class="fa-solid fa-sun text-sm"></i> Día (Natural)
+                </button>
+                
+                <button onclick="setMenuMode('night')" class="w-[48%] py-3 text-center rounded-xl font-['Montserrat'] font-black text-xs uppercase tracking-wider transition-all duration-300 z-10 text-white flex justify-center items-center gap-2" id="btnNight">
+                    <i class="fa-solid fa-moon text-sm"></i> Noche (Licor 18+)
+                </button>
+            </div>
+        </div>
+
+        <!-- PANEL DE PRECIOS -->
+        <div class="mx-4 my-2 p-5 rounded-2xl border transition-theme flex flex-col justify-center items-center gap-3 bg-black/40 backdrop-blur-sm shadow-lg" id="priceBanner">
+            <div class="flex items-center gap-2">
+                <span class="flex h-2 w-2 relative">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                </span>
+                <p class="font-['Poppins'] text-[10px] font-bold text-gray-400 uppercase tracking-[0.15em]" id="priceSubtitle">Reactor de Congelación Activo:</p>
+            </div>
+            <div class="flex w-full justify-around items-center divide-x divide-gray-800/80 mt-1">
+                <div class="text-center w-1/2">
+                    <span class="block text-[10px] uppercase font-['Montserrat'] text-gray-400 tracking-wider font-bold mb-1">Vaso Personal</span>
+                    <span class="font-['Montserrat'] font-black text-3.5xl text-[#fffb00] tracking-tight block transition-theme" id="pricePersonal">$10.000</span>
+                </div>
+                <div class="text-center w-1/2">
+                    <span class="block text-[10px] uppercase font-['Montserrat'] text-gray-400 tracking-wider font-bold mb-1">Vaso Grande</span>
+                    <span class="font-['Montserrat'] font-black text-3.5xl text-[#fffb00] tracking-tight block transition-theme" id="priceGrande">$17.000</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRODUCTOS -->
+        <div class="menu-items px-4 mt-4 flex flex-col gap-6">
+            <!-- MANGO TWIST -->
+            <div class="formula-card bg-[#090d16] border border-gray-800 rounded-[28px] p-4 flex flex-col gap-4 relative shadow-2xl transition-theme" id="cardMango">
+                <div class="relative w-full h-[240px] rounded-2xl overflow-hidden border border-gray-800 shadow-inner group">
+                    <img src="mango.jpeg" class="w-full h-full object-cover" alt="Mango Twist">
+                    <span class="absolute top-3 right-3 bg-[#00ff66] text-black font-['Montserrat'] font-black text-[9px] px-3 py-1.5 rounded-full uppercase tracking-wider" id="badgeMango">Fórmula Natural</span>
+                </div>
+                <div class="flex flex-col gap-2 px-1">
+                    <h2 class="font-['Fredoka'] text-2xl uppercase tracking-wide text-[#00ff66] transition-theme" id="titleMango">☣️ Mango Twist</h2>
+                    <p class="text-xs text-gray-300 leading-relaxed font-['Poppins'] transition-theme" id="descMango">El toque criollo y rebelde de la casa. Granizado de mango biche totalmente ácido, servido molecularmente con un choque cítrico de limón y cristales de sal.</p>
+                    <div class="mt-2 bg-black/50 border border-gray-800/80 rounded-xl px-3 py-2.5 text-[10px] font-['Montserrat'] font-bold tracking-wider uppercase text-gray-400 flex flex-col gap-0.5">
+                        <span class="text-[#00ffcc] transition-theme font-black" id="compMango">Mango Biche + Limón Molecular</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BLUE SKY -->
+            <div class="formula-card bg-[#090d16] border border-gray-800 rounded-[28px] p-4 flex flex-col gap-4 relative shadow-2xl transition-theme" id="cardBlue">
+                <div class="relative w-full h-[240px] rounded-2xl overflow-hidden border border-gray-800 shadow-inner group">
+                    <img src="Blue sky.jpeg" class="w-full h-full object-cover" alt="Blue Sky">
+                    <span class="absolute top-3 right-3 bg-[#00bfff] text-white font-['Montserrat'] font-black text-[9px] px-3 py-1.5 rounded-full uppercase tracking-wider" id="badgeBlue">Fórmula Natural</span>
+                </div>
+                <div class="flex flex-col gap-2 px-1">
+                    <h2 class="font-['Fredoka'] text-2xl uppercase tracking-wide text-[#00bfff] transition-theme" id="titleBlue">🌌 Blue Sky</h2>
+                    <p class="text-xs text-gray-300 leading-relaxed font-['Poppins'] transition-theme" id="descBlue">Una reacción refrescante bajo cero. Fusión helada de mora azul premium seleccionada, combinada al instante con un toque molecular burbujeante.</p>
+                    <div class="mt-2 bg-black/50 border border-gray-800/80 rounded-xl px-3 py-2.5 text-[10px] font-['Montserrat'] font-bold tracking-wider uppercase text-gray-400 flex flex-col gap-0.5">
+                        <span class="text-[#00ffcc] transition-theme font-black" id="compBlue">Mora Azul Silvestre + Soda Molecular</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RED BOOM -->
+            <div class="formula-card bg-[#090d16] border border-gray-800 rounded-[28px] p-4 flex flex-col gap-4 relative shadow-2xl transition-theme" id="cardRed">
+                <div class="relative w-full h-[240px] rounded-2xl overflow-hidden border border-gray-800 shadow-inner group">
+                    <img src="Red boom.jpeg" class="w-full h-full object-cover" alt="Red Boom">
+                    <span class="absolute top-3 right-3 bg-[#ff004f] text-white font-['Montserrat'] font-black text-[9px] px-3 py-1.5 rounded-full uppercase tracking-wider" id="badgeRed">Fórmula Natural</span>
+                </div>
+                <div class="flex flex-col gap-2 px-1">
+                    <h2 class="font-['Fredoka'] text-2xl uppercase tracking-wide text-[#ff004f] transition-theme" id="titleRed">💥 Red Boom</h2>
+                    <p class="text-xs text-gray-300 leading-relaxed font-['Poppins'] transition-theme" id="descRed">La explosión de dulzura frutal definitiva. Una bomba concentrada de fresa intensa combinada molecularmente para deleitar tus papilas gustativas.</p>
+                    <div class="mt-2 bg-black/50 border border-gray-800/80 rounded-xl px-3 py-2.5 text-[10px] font-['Montserrat'] font-bold tracking-wider uppercase text-gray-400 flex flex-col gap-0.5">
+                        <span class="text-[#00ffcc] transition-theme font-black" id="compRed">Fresa Intensa Concentrada</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN DE ENVÍOS -->
+        <div class="mx-4 mt-8 mb-4 p-[2px] rounded-3xl delivery-gradient-card shadow-2xl">
+            <div class="bg-[#070b12] rounded-[22px] p-5 flex flex-col gap-3 relative overflow-hidden">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 rounded-2xl bg-gradient-to-br from-[#00ffcc] to-cyan-500 flex justify-center items-center text-slate-950">
+                        <i class="fa-solid fa-motorcycle text-lg"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-['Fredoka'] text-lg text-white uppercase tracking-wide">📦 Servicio de Despacho</h3>
+                        <p class="font-['Montserrat'] text-[9px] font-bold text-cyan-400 tracking-widest uppercase">Entregas Activas</p>
+                    </div>
+                </div>
+                <div class="h-[1px] bg-gray-800 my-1"></div>
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-start gap-2.5">
+                        <i class="fa-solid fa-circle-check text-[#00ffcc] text-xs mt-1"></i>
+                        <p class="text-xs text-gray-300 font-['Poppins']">Envíos por app y con <span class="font-bold text-white">icelab por 10 mill</span>.</p>
+                    </div>
+                    <div class="bg-gradient-to-r from-[#ff007f]/20 to-transparent border border-[#ff007f]/30 rounded-xl px-3 py-2.5 flex items-center justify-between mt-1">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-gift text-[#ff007f] text-sm"></i>
+                            <span class="text-xs font-bold text-white font-['Poppins']">Por compra de 4 granizados en adelante</span>
+                        </div>
+                        <span class="font-['Montserrat'] font-black text-xs bg-[#ff007f] text-white px-2 py-1 rounded-md uppercase tracking-wider animate-pulse">¡GRATIS!</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="text-center mt-4 px-4 pb-4 text-[9px] font-['Montserrat'] font-black tracking-[0.15em] text-red-500 uppercase" id="warnText">
+            ⚠️ Consumo Refrescante y Apto Para Todos los Científicos ⚠️
+        </div>
+    </div>
+
+    <script>
+        const menuData = {
+            day: {
+                title: "Fórmulas",
+                priceBanner: "glow-day",
+                pricePersonal: "$10.000",
+                priceGrande: "$17.000",
+                pricesSub: "Modo de Día Activo: Sin Alcohol ☀️",
+                warnText: "⚠️ Consumo Refrescante y Apto Para Todos los Científicos ⚠️",
+                cards: {
+                    mango: { badge: "Fórmula Natural", badgeBg: "#00ff66", badgeTxt: "#000000", title: "☣️ Mango Twist", desc: "El toque criollo y rebelde de la casa. Granizado de mango biche totalmente ácido, servido molecularmente con un choque cítrico de limón y cristales de sal.", comp: "Mango Biche + Limón Molecular" },
+                    blue: { badge: "Fórmula Natural", badgeBg: "#00bfff", badgeTxt: "#ffffff", title: "🌌 Blue Sky", desc: "Una reacción refrescante bajo cero. Fusión helada de mora azul premium seleccionada, combinada al instante con un toque molecular burbujeante.", comp: "Mora Azul Silvestre + Soda Molecular" },
+                    red: { badge: "Fórmula Natural", badgeBg: "#ff004f", badgeTxt: "#ffffff", title: "💥 Red Boom", desc: "La explosión de dulzura frutal definitiva. Una bomba concentrada de fresa intensa combinada molecularmente para deleitar tus papilas gustativas de la forma más pura y refrescante.", comp: "Fresa Intensa Concentrada" }
+                }
+            },
+            night: {
+                title: "Fórmulas Con Alcohol",
+                priceBanner: "glow-night",
+                pricePersonal: "$12.000",
+                priceGrande: "$17.000",
+                pricesSub: "⚠️ Modo de Noche Activo: 100% Con Alcohol 🔞",
+                warnText: "⚠️ ADVERTENCIA: CONSUMO EXCLUSIVO PARA MAYORES DE EDAD ⚠️",
+                cards: {
+                    mango: { badge: "Dosis Activa 🔞", badgeBg: "#ff0055", badgeTxt: "#ffffff", title: "☣️ Mango Twist + Licor", desc: "El toque criollo y rebelde de la casa. Granizado de mango biche totalmente ácido mezclado con el poder puro del Aguardiente Antioqueño.", comp: "Mango Biche + Aguardiente Antioqueño" },
+                    blue: { badge: "Dosis Activa 🔞", badgeBg: "#ff0055", badgeTxt: "#ffffff", title: "🌌 Blue Sky + Licor", desc: "Una reacción electrizante bajo cero. Fusión líquida de mora azul premium alterada con un fuerte golpe de vodka purificado.", comp: "Mora Azul Premium + Vodka" },
+                    red: { badge: "Doble Dosis 🔞", badgeBg: "#ff0055", badgeTxt: "#ffffff", title: "💥 Red Boom + Licor", desc: "La detonación frutal definitiva de nuestro laboratorio. Una sobredosis química de fresa intensa potenciada al límite con una doble dosis combinada de vodka y alma de aguardiente.", comp: "Fresa Intensa + Vodka + Aguardiente" }
+                }
+            }
+        };
+
+        function setMenuMode(mode) {
+            const data = menuData[mode];
+            const selectorBg = document.getElementById("modeSelectorBg");
+            const btnDay = document.getElementById("btnDay");
+            const btnNight = document.getElementById("btnNight");
+
+            if (mode === 'day') {
+                selectorBg.style.left = "6px";
+                selectorBg.style.backgroundColor = "#00ffcc";
+                selectorBg.style.boxShadow = "0 0 20px rgba(0,255,204,0.5)";
+                btnDay.style.color = "#020617";
+                btnNight.style.color = "#ffffff";
+            } else {
+                selectorBg.style.left = "50%";
+                selectorBg.style.backgroundColor = "#ff007f";
+                selectorBg.style.boxShadow = "0 0 20px rgba(255,0,127,0.5)";
+                btnDay.style.color = "#ffffff";
+                btnNight.style.color = "#020617";
+            }
+
+            document.getElementById("mainTitle").innerText = data.title;
+            const textLogo = document.getElementById("textLogo");
+            const subtextLogo = document.getElementById("subtextLogo");
+            
+            if (mode === 'day') {
+                textLogo.className = "font-['Fredoka'] text-[54px] leading-none uppercase tracking-wider text-white transition-all duration-300 neon-day-glow";
+                subtextLogo.style.color = "#00ffcc";
+            } else {
+                textLogo.className = "font-['Fredoka'] text-[54px] leading-none uppercase tracking-wider text-white transition-all duration-300 neon-night-glow";
+                subtextLogo.style.color = "#ff007f";
+            }
+
+            document.getElementById("pricePersonal").innerText = data.pricePersonal;
+            document.getElementById("priceGrande").innerText = data.priceGrande;
+            document.getElementById("priceSubtitle").innerText = data.pricesSub;
+            document.getElementById("warnText").innerText = data.warnText;
+
+            const priceBanner = document.getElementById("priceBanner");
+            priceBanner.className = `mx-4 my-2 p-5 rounded-2xl border transition-theme flex flex-col justify-center items-center gap-3 bg-black/40 backdrop-blur-sm shadow-lg ${data.priceBanner}`;
+
+            document.getElementById("badgeMango").innerText = data.cards.mango.badge;
+            document.getElementById("badgeMango").style.backgroundColor = data.cards.mango.badgeBg;
+            document.getElementById("badgeMango").style.color = data.cards.mango.badgeTxt;
+            document.getElementById("titleMango").innerText = data.cards.mango.title;
+            document.getElementById("descMango").innerText = data.cards.mango.desc;
+            document.getElementById("compMango").innerText = data.cards.mango.comp;
+
+            document.getElementById("badgeBlue").innerText = data.cards.blue.badge;
+            document.getElementById("badgeBlue").style.backgroundColor = data.cards.blue.badgeBg;
+            document.getElementById("badgeBlue").style.color = data.cards.blue.badgeTxt;
+            document.getElementById("titleBlue").innerText = data.cards.blue.title;
+            document.getElementById("descBlue").innerText = data.cards.blue.desc;
+            document.getElementById("compBlue").innerText = data.cards.blue.comp;
+
+            document.getElementById("badgeRed").innerText = data.cards.red.badge;
+            document.getElementById("badgeRed").style.backgroundColor = data.cards.red.badgeBg;
+            document.getElementById("badgeRed").style.color = data.cards.red.badgeTxt;
+            document.getElementById("titleRed").innerText = data.cards.red.title;
+            document.getElementById("descRed").innerText = data.cards.red.desc;
+            document.getElementById("compRed").innerText = data.cards.red.comp;
+        }
+
+        window.onload = function() {
+            setMenuMode("day");
+        }
+    </script>
+</body>
+</html>
